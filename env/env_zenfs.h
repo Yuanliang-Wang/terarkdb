@@ -173,11 +173,11 @@ class ZenFS : public FileSystemWrapper {
   std::shared_ptr<Logger> GetLogger() { return logger_; }
 
   struct MetadataWriter : public ZonedWritableFile::MetadataWriter {
-    ZenFS* zenFS;
+    ZenEnv* zenEnv;
     Status Persist(ZoneFile* zoneFile) {
-      Debug(zenFS->GetLogger(), "Syncing metadata for: %s",
+      Debug(zenEnv->GetLogger(), "Syncing metadata for: %s",
             zoneFile->GetFilename().c_str());
-      return zenFS->SyncFileMetadata(zoneFile);
+      return zenEnv->SyncFileMetadata(zoneFile);
     }
   };
 
@@ -222,8 +222,8 @@ class ZenFS : public FileSystemWrapper {
   Status DeleteFile(std::string fname);
 
  public:
-  explicit ZenFS(ZonedBlockDevice* zbd, std::shared_ptr<FileSystem> aux_fs,
-                 std::shared_ptr<Logger> logger);
+  explicit ZenEnv(ZonedBlockDevice* zbd, Env* env,
+                  std::shared_ptr<Logger> logger);
   virtual ~ZenFS();
 
   Status Mount();
