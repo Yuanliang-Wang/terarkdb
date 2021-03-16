@@ -25,7 +25,7 @@
 #include "rocksdb/env.h"
 #include "rocksdb/io_status.h"
 
-namespace ROCKSDB_NAMESPACE {
+namespace TERARKDB_NAMESPACE {
 
 class ZonedBlockDevice;
 
@@ -115,7 +115,7 @@ class ZonedBlockDevice {
   void NotifyIOZoneClosed();
 };
 
-}  // namespace ROCKSDB_NAMESPACE
+}  // namespace TERARKDB_NAMESPACE
 
 #endif  // !defined(ROCKSDB_LITE) && defined(OS_LINUX) && defined(LIBZBD)
 
