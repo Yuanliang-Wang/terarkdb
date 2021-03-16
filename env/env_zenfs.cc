@@ -7,7 +7,7 @@
 
 #if !defined(ROCKSDB_LITE) && defined(OS_LINUX) && defined(LIBZBD)
 
-#include "env/fs_zenfs.h"
+#include "env/env_zenfs.h"
 
 #include <dirent.h>
 #include <errno.h>
@@ -385,7 +385,7 @@ Status ZenEnv::NewWritableFile(const std::string& fname,
         options.use_direct_writes);
 
   if (GetFile(fname) != nullptr) {
-    s = DeleteFile(fname);
+    s = DeleteFile_Internal(fname);
     if (!s.ok()) return s;
   }
 
@@ -938,20 +938,5 @@ std::map<std::string, std::string> ListZenFileSystems() {
 }
 
 };  // namespace ROCKSDB_NAMESPACE
-
-#else
-
-#include "rocksdb/env.h"
-
-namespace ROCKSDB_NAMESPACE {
-Status NewZenFS(FileSystem** /*fs*/, const std::string& /*bdevname*/) {
-  return Status::NotSupported("Not built with ZenFS support\n");
-}
-std::map<std::string, std::string> ListZenFileSystems() {
-  std::map<std::string, std::string> zenFileSystems;
-  return zenFileSystems;
-}
-} // namespace_TERARKDB_NAMESPACE
-
 #endif  // !defined(ROCKSDB_LITE) && defined(OS_LINUX) && defined(LIBZBD)
 

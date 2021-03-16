@@ -10,7 +10,6 @@
 #include "env/io_zenfs.h"
 #include "env/zbd_zenfs.h"
 #include "rocksdb/env.h"
-#include "rocksdb/file_system.h"
 #include "rocksdb/status.h"
 #include "util/coding.h"
 
@@ -219,19 +218,15 @@ class ZenFS : public FileSystemWrapper {
   }
 
   ZoneFile* GetFile(std::string fname);
-  Status DeleteFile(std::string fname);
+  Status DeleteFile_Internal(std::string fname);
 
  public:
   explicit ZenEnv(ZonedBlockDevice* zbd, Env* env,
                   std::shared_ptr<Logger> logger);
-  virtual ~ZenFS();
+  ~ZenEnv();
 
   Status Mount();
   Status MkFS(std::string aux_fs_path, uint32_t finish_threshold);
-
-  const char* Name() const override {
-    return "ZenFS - The Zoned-enabled File System";
-  }
 
   virtual Status NewSequentialFile(const std::string& fname,
                                    std::unique_ptr<SequentialFile>* result,
@@ -375,7 +370,6 @@ class ZenFS : public FileSystemWrapper {
 };
 #endif  // !defined(ROCKSDB_LITE) && defined(OS_LINUX) && defined(LIBZBD)
 
-Status NewZenFS(FileSystem** fs, const std::string& bdevname);
 std::map<std::string, std::string> ListZenFileSystems();
 
 };  // namespace TERARKDB_NAMESPACE
